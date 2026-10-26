@@ -1,0 +1,22 @@
+{
+  "segments": {
+    "beta-testers": { "included": ["u-42", "u-7"], "rules": [{ "clauses": [{ "attribute": "email", "op": "endsWith", "values": ["@prism.dev"] }] }] }
+  },
+  "flags": {
+    "new-checkout": {
+      "key": "new-checkout", "on": true, "salt": "nc1", "variations": [false, true], "offVariation": 0,
+      "targets": [{ "variation": 1, "values": ["vip-1"] }],
+      "rules": [
+        { "id": "beta", "clauses": [{ "attribute": "segment", "op": "segmentMatch", "values": ["beta-testers"] }], "variation": 1 },
+        { "id": "india-mobile", "clauses": [{ "attribute": "country", "op": "in", "values": ["IN"] }, { "attribute": "appVersion", "op": "semverGte", "values": ["5.2.0"] }], "rollout": { "variations": [{ "variation": 1, "weight": 50000 }, { "variation": 0, "weight": 50000 }] } }
+      ],
+      "fallthrough": { "rollout": { "variations": [{ "variation": 1, "weight": 10000 }, { "variation": 0, "weight": 90000 }] } }
+    },
+    "pricing-experiment": {
+      "key": "pricing-experiment", "on": true, "variations": ["control", "annual-discount", "usage-based"],
+      "prerequisites": [{ "key": "new-checkout", "variation": 1 }],
+      "fallthrough": { "rollout": { "variations": [{ "variation": 0, "weight": 34000 }, { "variation": 1, "weight": 33000 }, { "variation": 2, "weight": 33000 }] } }
+    },
+    "kill-switch-payments": { "key": "kill-switch-payments", "on": false, "variations": [true, false], "offVariation": 0, "fallthrough": { "variation": 1 } }
+  }
+}

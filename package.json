@@ -1,0 +1,43 @@
+{
+  "name": "prism-flags",
+  "version": "1.0.0",
+  "description": "Prism Flags is a multi-region feature flag and A/B testing engine: targeting rules with 15 operators, segments, prerequisites, deterministic murmur3 bucketing, a versioned control plane that replicates to regions with ordered, idempotent delivery, and a SHA-256 hash-chained audit log.",
+  "type": "module",
+  "bin": {
+    "flags": "bin/flags.js"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "start": "npx --yes serve ."
+  },
+  "keywords": [
+    "feature-flags",
+    "feature-toggles",
+    "ab-testing",
+    "launchdarkly",
+    "progressive-delivery",
+    "multi-region",
+    "replication",
+    "experimentation",
+    "devops",
+    "javascript"
+  ],
+  "author": "Soumya Bhandare (krishyaa06)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krishyaa06/prism-flags.git"
+  },
+  "homepage": "https://krishyaa06.github.io/prism-flags/",
+  "engines": {
+    "node": ">=18.17"
+  }
+}

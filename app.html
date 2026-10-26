@@ -1,0 +1,38 @@
+<div class="sim">
+  <div class="main">
+    <div class="panel glow">
+      <div class="toolbar">
+        <button class="btn primary sm" data-play>▶ Run</button>
+        <select data-speed aria-label="Speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+        <span class="sep"></span>
+        <select id="flag" aria-label="Flag"></select>
+        <button class="btn sm" id="toggle">Kill switch</button>
+        <label class="f inl">Rollout <input type="range" id="pct" min="0" max="100" value="25" /><output id="po">25%</output></label>
+        <span class="sep"></span>
+        <select id="reg" aria-label="Region"></select>
+        <button class="btn sm bad" id="part">Partition</button>
+        <span class="sp"></span>
+        <span class="live"><i></i> paused</span>
+      </div>
+      <div id="kpis" style="margin-top:12px"></div>
+    </div>
+    <div class="viz" id="mapw" style="height:420px"><span class="tag">Control plane → regions · each dot is the same user, evaluated at the edge</span><canvas id="map"></canvas></div>
+    <div class="g2 grid">
+      <div class="panel"><div class="ph">Replication lag per region (versions behind)</div><canvas class="chart" id="ch1" style="height:140px"></canvas></div>
+      <div class="panel"><div class="ph">Edge evaluations / second</div><canvas class="chart" id="ch2" style="height:140px"></canvas></div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><div class="ph">Evaluate a context<span class="sp"></span><span class="pill dim" id="evreg">us-east-1</span></div>
+      <div class="g2 grid" style="gap:8px">
+        <label class="f">key <input id="ck" value="user-1042" spellcheck="false" /></label>
+        <label class="f">country <select id="cc"><option>IN</option><option>US</option><option>DE</option><option>BR</option></select></label>
+        <label class="f">appVersion <input id="cv" value="5.3.0" spellcheck="false" /></label>
+        <label class="f">email <input id="ce" value="riya@gmail.com" spellcheck="false" /></label>
+      </div>
+      <div id="evout" class="log" style="height:96px;margin-top:10px;font-size:11px"></div>
+    </div>
+    <div class="panel"><div class="ph">Audit log · hash chain<span class="sp"></span><span class="pill ok" id="chain">valid</span></div><div id="audit" class="log" style="height:210px"></div></div>
+    <div class="panel"><div class="ph">Flag definition</div><pre id="json" class="log" style="height:230px;white-space:pre"></pre></div>
+  </div>
+</div>

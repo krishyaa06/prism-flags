@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prism Flags · Multi-region feature flags with rules, sticky rollouts and audit chain · Prism Systems</title>
+  <meta name="description" content="Prism Flags is a multi-region feature flag and A/B testing engine: targeting rules with 15 operators, segments, prerequisites, deterministic murmur3 bucketing, a versioned control plane that replicates to regions with ordered, idempotent delivery, and a SHA-256 hash-chained audit log." />
+  <meta name="theme-color" content="#06070d" />
+  <meta property="og:title" content="Prism Flags · Prism Systems" />
+  <meta property="og:description" content="Prism Flags is a multi-region feature flag and A/B testing engine: targeting rules with 15 operators, segments, prerequisites, deterministic murmur3 bucketing, a versioned control plane that replicates to regions with ordered, idempotent delivery, and a SHA-256 hash-chained audit log." />
+  <meta property="og:image" content="https://krishyaa06.github.io/prism-flags/assets/screenshots/desktop.png" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/pro.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>:root{--accent:#22E3A1;--accent-2:#00D2FF}</style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <header class="topbar"><div class="wrap">
+    <a class="brand" href="./"><span class="mark">◆</span><b>PRISM</b><span>Flags</span></a>
+    <nav>
+      <a class="nl" href="#sim">Simulator</a><a class="nl" href="#features">Features</a><a class="nl" href="#how">How it works</a><a class="nl" href="#arch">Architecture</a><a class="nl" href="#use">Use it</a>
+      <a class="btn sm" href="https://github.com/krishyaa06/prism-flags" target="_blank" rel="noreferrer">★ GitHub</a>
+    </nav>
+  </div></header>
+  <main>
+    <section class="hero wrap">
+      <p class="eyebrow"><span class="n">03 / 49</span>Prism Systems · Cloud-Native &amp; Developer Infrastructure</p>
+      <h1>Feature flags evaluated at the <em>edge, in microseconds</em></h1>
+      <p class="lead">A LaunchDarkly-style feature flag engine: targeting rules, segments, prerequisites, sticky murmur3 percentage rollouts, multi-region replication that survives partitions, and a tamper-evident audit chain.</p>
+      <div class="cta"><a class="btn primary" href="#sim">▶ Launch the simulator</a><a class="btn" href="#use">Use the engine</a><a class="btn ghost" href="https://github.com/krishyaa06/prism-flags" target="_blank" rel="noreferrer">View source →</a></div>
+      <div class="chips"><span class="chip"><i></i>Zero dependencies</span><span class="chip"><i></i>~3µs per evaluation</span><span class="chip"><i></i>15 operators</span><span class="chip"><i></i>Ordered replication</span><span class="chip"><i></i>Kill switch</span></div>
+    </section>
+    <section class="section wrap" id="sim">
+      <div class="sec-head"><span class="kicker">Live simulator</span><h2>Roll out to four regions at once</h2><p>The same 96 users are evaluated in four regions. Drag the rollout slider and watch versions replicate, partition Mumbai to see it serve stale config, hit the kill switch, then heal it and watch it converge in order.</p></div>
+<div class="sim">
+  <div class="main">
+    <div class="panel glow">
+      <div class="toolbar">
+        <button class="btn primary sm" data-play>▶ Run</button>
+        <select data-speed aria-label="Speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+        <span class="sep"></span>
+        <select id="flag" aria-label="Flag"></select>
+        <button class="btn sm" id="toggle">Kill switch</button>
+        <label class="f inl">Rollout <input type="range" id="pct" min="0" max="100" value="25" /><output id="po">25%</output></label>
+        <span class="sep"></span>
+        <select id="reg" aria-label="Region"></select>
+        <button class="btn sm bad" id="part">Partition</button>
+        <span class="sp"></span>
+        <span class="live"><i></i> paused</span>
+      </div>
+      <div id="kpis" style="margin-top:12px"></div>
+    </div>
+    <div class="viz" id="mapw" style="height:420px"><span class="tag">Control plane → regions · each dot is the same user, evaluated at the edge</span><canvas id="map"></canvas></div>
+    <div class="g2 grid">
+      <div class="panel"><div class="ph">Replication lag per region (versions behind)</div><canvas class="chart" id="ch1" style="height:140px"></canvas></div>
+      <div class="panel"><div class="ph">Edge evaluations / second</div><canvas class="chart" id="ch2" style="height:140px"></canvas></div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><div class="ph">Evaluate a context<span class="sp"></span><span class="pill dim" id="evreg">us-east-1</span></div>
+      <div class="g2 grid" style="gap:8px">
+        <label class="f">key <input id="ck" value="user-1042" spellcheck="false" /></label>
+        <label class="f">country <select id="cc"><option>IN</option><option>US</option><option>DE</option><option>BR</option></select></label>
+        <label class="f">appVersion <input id="cv" value="5.3.0" spellcheck="false" /></label>
+        <label class="f">email <input id="ce" value="riya@gmail.com" spellcheck="false" /></label>
+      </div>
+      <div id="evout" class="log" style="height:96px;margin-top:10px;font-size:11px"></div>
+    </div>
+    <div class="panel"><div class="ph">Audit log · hash chain<span class="sp"></span><span class="pill ok" id="chain">valid</span></div><div id="audit" class="log" style="height:210px"></div></div>
+    <div class="panel"><div class="ph">Flag definition</div><pre id="json" class="log" style="height:230px;white-space:pre"></pre></div>
+  </div>
+</div>
+
+    </section>
+    <section class="section wrap" id="features">
+      <div class="sec-head reveal"><span class="kicker">Features</span><h2>What's inside the engine</h2><p>Real algorithms, not mock-ups. The simulator above runs the exact same code you import.</p></div>
+      <div class="feat"><div class="card reveal"><div class="ic">⚑</div><h3>Targeting rules</h3><p>15 operators (<code class="mono">in</code>, <code class="mono">endsWith</code>, <code class="mono">matches</code>, <code class="mono">semverGte</code>, <code class="mono">before</code>, <code class="mono">gt</code>…), negation, array attributes and per-user targets.</p></div><div class="card reveal"><div class="ic">◎</div><h3>Segments</h3><p>Reusable audiences with include/exclude lists and their own rules, referenced via <code class="mono">segmentMatch</code>.</p></div><div class="card reveal"><div class="ic">%</div><h3>Sticky rollouts</h3><p><code class="mono">murmur3(flag.salt.key) % 100000</code> buckets users the same way in every region. Raising the percentage never flips users out.</p></div><div class="card reveal"><div class="ic">⛓</div><h3>Prerequisites</h3><p>A flag can require another flag&#x27;s variation, with cycle protection, which is how experiments depend on launches.</p></div><div class="card reveal"><div class="ic">🌍</div><h3>Multi-region replication</h3><p>A versioned control plane pushes changes to regions. Delivery is idempotent, out-of-order changes are buffered and applied in sequence.</p></div><div class="card reveal"><div class="ic">✂</div><h3>Partition tolerant</h3><p>A partitioned region keeps serving its last known config and catches up in order when it heals.</p></div><div class="card reveal"><div class="ic">#</div><h3>Audit hash chain</h3><p>Every change records actor, comment and a field diff, chained with SHA-256 so tampering is detectable.</p></div><div class="card reveal"><div class="ic">⚡</div><h3>Fast evaluation</h3><p>Pure functions with a regex cache: roughly 3µs per evaluation on Node 20, millions per second for simple flags.</p></div></div>
+    </section>
+    <section class="section wrap" id="how">
+      <div class="sec-head reveal"><span class="kicker">How it works</span><h2>From request to result</h2></div>
+      <div class="steps"><div class="step reveal"><h3>Define</h3><p>A flag has variations, targets, ordered rules, a fallthrough and an off variation. Rules contain clauses on context attributes.</p></div><div class="step reveal"><h3>Evaluate</h3><p>Order: off → prerequisites → individual targets → first matching rule → fallthrough. Each result carries a reason such as <code class="mono">RULE_MATCH</code> or <code class="mono">PREREQUISITE_FAILED</code>.</p></div><div class="step reveal"><h3>Bucket</h3><p>Rollouts hash flag key, salt and user key into 100,000 buckets and walk the cumulative weights. No state is stored per user.</p></div><div class="step reveal"><h3>Publish</h3><p>The control plane assigns a global version, appends to the change log, writes an audit entry and fans the change out to every region.</p></div><div class="step reveal"><h3>Converge</h3><p>Regions apply version N only after N−1. Gaps are buffered. After a partition, a region drains its buffer or <code class="mono">resync()</code>s from the log.</p></div></div>
+    </section>
+    <section class="section wrap" id="arch">
+      <div class="sec-head reveal"><span class="kicker">Architecture</span><h2>System design</h2><p>Every box is a module in src/. Data flows left to right.</p></div>
+      <div class="card arch reveal"><svg viewBox="0 0 1160 310" role="img" aria-label="Architecture diagram"><path class="e" d="M258,142 C288,142 288,164 258,164"/><path class="f" d="M258,142 C288,142 288,164 258,164"/><path class="e" d="M272,193 C290,193 290,73 308,73"/><path class="f" d="M272,193 C290,193 290,73 308,73"/><text class="el" x="290" y="127" text-anchor="middle">change</text><path class="e" d="M548,102 C578,102 578,124 548,124"/><path class="f" d="M548,102 C578,102 578,124 548,124"/><path class="e" d="M548,102 C578,102 578,204 548,204"/><path class="f" d="M548,102 C578,102 578,204 548,204"/><path class="e" d="M562,153 C580,153 580,113 598,113"/><path class="f" d="M562,153 C580,153 580,113 598,113"/><text class="el" x="580" y="127" text-anchor="middle">fan-out</text><path class="e" d="M838,142 C868,142 868,164 838,164"/><path class="f" d="M838,142 C868,142 868,164 838,164"/><text class="el" x="868" y="153" text-anchor="middle">apply vN</text><path class="e" d="M852,193 C870,193 870,113 888,113"/><path class="f" d="M852,193 C870,193 870,113 888,113"/><path class="e" d="M1128,142 C1158,142 1158,164 1128,164"/><path class="f" d="M1128,142 C1158,142 1158,164 1128,164"/><text class="lane" x="145" y="24" text-anchor="middle">AUTHORING</text><g class="node k0"><rect x="18" y="84" width="254" height="58" rx="12"/><text x="145" y="109" text-anchor="middle">Dashboard</text><text class="s" x="145" y="123" text-anchor="middle">rules · rollout</text></g><g class="node k0"><rect x="18" y="164" width="254" height="58" rx="12"/><text x="145" y="189" text-anchor="middle">Flags API</text><text class="s" x="145" y="203" text-anchor="middle">setFlag()</text></g><text class="lane" x="435" y="24" text-anchor="middle">CONTROL PLANE</text><g class="node kk2"><rect x="308" y="44" width="254" height="58" rx="12"/><text x="435" y="69" text-anchor="middle">Versioner</text><text class="s" x="435" y="83" text-anchor="middle">global seq</text></g><g class="node kk2"><rect x="308" y="124" width="254" height="58" rx="12"/><text x="435" y="149" text-anchor="middle">Change log</text><text class="s" x="435" y="163" text-anchor="middle">append-only</text></g><g class="node kk2"><rect x="308" y="204" width="254" height="58" rx="12"/><text x="435" y="229" text-anchor="middle">Audit chain</text><text class="s" x="435" y="243" text-anchor="middle">SHA-256</text></g><text class="lane" x="725" y="24" text-anchor="middle">REGIONS</text><g class="node kk3"><rect x="598" y="84" width="254" height="58" rx="12"/><text x="725" y="109" text-anchor="middle">Replicator</text><text class="s" x="725" y="123" text-anchor="middle">ordered · idempotent</text></g><g class="node kk3"><rect x="598" y="164" width="254" height="58" rx="12"/><text x="725" y="189" text-anchor="middle">Edge store</text><text class="s" x="725" y="203" text-anchor="middle">per region</text></g><text class="lane" x="1015" y="24" text-anchor="middle">SDKS</text><g class="node k0"><rect x="888" y="84" width="254" height="58" rx="12"/><text x="1015" y="109" text-anchor="middle">evaluate()</text><text class="s" x="1015" y="123" text-anchor="middle">~3µs</text></g><g class="node k0"><rect x="888" y="164" width="254" height="58" rx="12"/><text x="1015" y="189" text-anchor="middle">Your app</text><text class="s" x="1015" y="203" text-anchor="middle">value + reason</text></g></svg></div>
+    </section>
+    <section class="section wrap" id="use">
+      <div class="sec-head reveal"><span class="kicker">Use it</span><h2>Ship it in your own stack</h2><p>Zero dependencies. Works in Node.js 18+ and modern browsers.</p></div>
+      <div class="tabs" data-tabs="use"><button class="on">JavaScript API</button><button>CLI</button><button>Install</button></div>
+      <div class="tabp on" data-tabp="use"><div class="codebox"><div class="bar2"><i></i><i></i><i></i><span>example.js</span><button class="btn sm ghost copy" data-copy>Copy</button></div><pre><code><span class="tk-k">import</span> { evaluate, percent, Region, ControlPlane } <span class="tk-k">from</span> <span class="tk-s">&quot;prism-flags&quot;</span>;
+
+<span class="tk-k">const</span> flag = {
+  key: <span class="tk-s">&quot;new-checkout&quot;</span>, on: <span class="tk-k">true</span>, variations: [<span class="tk-k">false</span>, <span class="tk-k">true</span>],
+  rules: [{ id: <span class="tk-s">&quot;india-v5&quot;</span>, clauses: [
+    { attribute: <span class="tk-s">&quot;country&quot;</span>, op: <span class="tk-s">&quot;in&quot;</span>, values: [<span class="tk-s">&quot;IN&quot;</span>] },
+    { attribute: <span class="tk-s">&quot;appVersion&quot;</span>, op: <span class="tk-s">&quot;semverGte&quot;</span>, values: [<span class="tk-s">&quot;5.2.0&quot;</span>] },
+  ], variation: <span class="tk-n">1</span> }],
+  fallthrough: <span class="tk-f">percent</span>(<span class="tk-n">10</span>),          <span class="tk-c">// 10% of everyone else</span>
+};
+
+<span class="tk-f">evaluate</span>(flag, { key: <span class="tk-s">&quot;u-1&quot;</span>, country: <span class="tk-s">&quot;IN&quot;</span>, appVersion: <span class="tk-s">&quot;5.3.0&quot;</span> });
+<span class="tk-c">// → { value: true, variation: 1, reason: { kind: &quot;RULE_MATCH&quot;, ruleId: &quot;india-v5&quot; } }</span>
+
+<span class="tk-c">// multi-region</span>
+<span class="tk-k">const</span> regions = [<span class="tk-s">&quot;us-east-1&quot;</span>, <span class="tk-s">&quot;ap-south-1&quot;</span>].<span class="tk-f">map</span>((n) =&gt; <span class="tk-k">new</span> <span class="tk-f">Region</span>(n));
+<span class="tk-k">const</span> cp = <span class="tk-k">new</span> <span class="tk-f">ControlPlane</span>(regions);
+cp.<span class="tk-f">setFlag</span>(flag, { actor: <span class="tk-s">&quot;alice&quot;</span>, comment: <span class="tk-s">&quot;launch&quot;</span> });
+cp.<span class="tk-f">tick</span>(<span class="tk-n">1</span>);                          <span class="tk-c">// deliver</span>
+regions[<span class="tk-n">1</span>].<span class="tk-f">evaluate</span>(<span class="tk-s">&quot;new-checkout&quot;</span>, { key: <span class="tk-s">&quot;u-1&quot;</span> });
+console.<span class="tk-f">log</span>(cp.<span class="tk-f">verifyAudit</span>());       <span class="tk-c">// true</span></code></pre></div></div>
+      <div class="tabp" data-tabp="use"><div class="codebox"><div class="bar2"><i></i><i></i><i></i><span>terminal</span><button class="btn sm ghost copy" data-copy>Copy</button></div><pre><code><span class="tk-pr">$ </span>npx github:krishyaa06/prism-flags eval examples/flags.json <span class="tk-p">--flag</span> new-checkout <span class="tk-p">--ctx</span> &#x27;{<span class="tk-s">&quot;key&quot;</span>:<span class="tk-s">&quot;u1&quot;</span>,<span class="tk-s">&quot;country&quot;</span>:<span class="tk-s">&quot;IN&quot;</span>,<span class="tk-s">&quot;appVersion&quot;</span>:<span class="tk-s">&quot;5.4.0&quot;</span>}&#x27;
+<span class="tk-pr">$ </span>npx github:krishyaa06/prism-flags rollout examples/flags.json <span class="tk-p">--flag</span> pricing-experiment
+<span class="tk-pr">$ </span>npx github:krishyaa06/prism-flags bench examples/flags.json
+<span class="tk-pr">$ </span>npx github:krishyaa06/prism-flags regions</code></pre></div></div>
+      <div class="tabp" data-tabp="use"><div class="codebox"><div class="bar2"><i></i><i></i><i></i><span>terminal</span><button class="btn sm ghost copy" data-copy>Copy</button></div><pre><code><span class="tk-c"># use the CLI without installing</span>
+<span class="tk-pr">$ </span>npx github:krishyaa06/prism-flags <span class="tk-p">--help</span>
+
+<span class="tk-c"># or add the engine to your project</span>
+<span class="tk-pr">$ </span>npm install github:krishyaa06/prism-flags
+
+<span class="tk-c"># run the simulator locally</span>
+<span class="tk-pr">$ </span>git clone https://github.com/krishyaa06/prism-flags.git &amp;&amp; cd prism-flags
+<span class="tk-pr">$ </span>npx serve .   # then open http://localhost:3000</code></pre></div></div>
+    </section>
+  </main>
+  <footer class="foot"><div class="wrap">
+    <span>◆ Prism Flags · Prism Systems 03/49 · Built by <a href="https://github.com/krishyaa06">Soumya Bhandare</a> &amp; <a href="https://dc.gg/prismprotocol" target="_blank" rel="noreferrer">Prism Protocol</a></span>
+    <span><a href="https://github.com/krishyaa06/prism-flags" target="_blank" rel="noreferrer">Source</a> · <a href="https://github.com/krishyaa06/prism-flags/blob/main/docs/ARCHITECTURE.md">Architecture</a> · <a href="https://github.com/krishyaa06/prism-flags/blob/main/docs/USAGE.md">Docs</a> · MIT License</span>
+  </div></footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
