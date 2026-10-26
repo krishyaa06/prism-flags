@@ -1,4 +1,4 @@
-<!-- Prism Systems 03/49 -->
+<!-- Prism Systems 03/12 -->
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:06070d,55:22E3A1,100:00D2FF&height=210&section=header&text=Prism%20Flags&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Multi-region%20feature%20flags%20with%20rules%2C%20sticky%20rollouts%20and%20audit%20chain&descAlignY=57&descSize=17" width="100%" alt="Prism Flags" />
 </p>
@@ -12,7 +12,7 @@
   <a href="https://krishyaa06.github.io/prism-flags/"><img src="https://img.shields.io/badge/Live_Simulator-Open-22E3A1?style=for-the-badge&logo=githubpages&logoColor=black" alt="Live simulator" /></a>
   <img src="https://img.shields.io/badge/Node.js-%E2%89%A518.17-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js 18+" />
   <img src="https://img.shields.io/badge/dependencies-0-00D2FF?style=for-the-badge" alt="Zero dependencies" />
-  <img src="https://img.shields.io/badge/Prism_Systems-03%2F49-111827?style=for-the-badge" alt="Prism Systems 03/49" />
+  <img src="https://img.shields.io/badge/Prism_Systems-03%2F12-111827?style=for-the-badge" alt="Prism Systems 03/12" />
   <a href="LICENSE"><img src="https://img.shields.io/github/license/krishyaa06/prism-flags?style=for-the-badge&color=00D2FF" alt="MIT License" /></a>
 </p>
 
@@ -238,7 +238,7 @@ The test suite uses the built-in `node:test` runner, so there is nothing to inst
 
 ## 🔷 Part of Prism Systems
 
-**Prism Flags** is system **03 of 49** in **Prism Systems**, a series of open-source reference implementations of large-scale infrastructure by [Prism Protocol](https://dc.gg/prismprotocol). Each one ships a real engine, a CLI and a live simulator, all with zero dependencies.
+**Prism Flags** is system **03 of 12** in **Prism Systems**, a series of open-source reference implementations of large-scale infrastructure by [Prism Protocol](https://dc.gg/prismprotocol). Each one ships a real engine, a CLI and a live simulator, all with zero dependencies.
 
 ## 👤 Author
 
